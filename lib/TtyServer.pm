@@ -5,12 +5,16 @@
 
 package TtyServer;
 
+use strict;
+use warnings;
+
 sub import {
 	my $class = shift;
 	my $caller = caller;
 
 	my $app = $class->new();
 
+	no strict 'refs';
 	*{"${caller}::app"} = sub { return $app; };
 	*{"${caller}::every"} = sub { $app->every(@_); };
 }

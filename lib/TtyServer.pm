@@ -9,6 +9,7 @@ use strict;
 use warnings;
 
 use AnyEvent;
+use JSON qw();
 
 sub import {
 	my $class = shift;
@@ -19,6 +20,10 @@ sub import {
 	no strict 'refs';
 	*{"${caller}::app"} = sub { return $app; };
 	*{"${caller}::every"} = sub { $app->every(@_); };
+	*{"${caller}::line"} = sub { $app->line(@_); };
+	*{"${caller}::json"} = sub { $app->json(@_); };
+	*{"${caller}::send"} = sub { $app->send(@_); };
+	*{"${caller}::on_error"} = sub { $app->{on_error} = $_[0]; };
 }
 
 sub new {
@@ -28,6 +33,7 @@ sub new {
 	bless $self, $class;
 
 	$self->{cv} = AnyEvent->condvar;
+	$self->{json} = JSON->new->utf8->canonical;
 
 	return $self;
 }
@@ -56,6 +62,75 @@ sub stop {
 	my($self, $rc) = @_;
 
 	$self->{cv}->send($rc);
+}
+
+sub _inputwait {
+	my ($self) = @_;
+
+	return if ($self->{input});
+
+	my $w;
+	$w = AnyEvent->io(
+		fh => \*STDIN,
+		poll => 'r',
+		cb => sub {
+			my $line = <STDIN>;
+			$self->_distribute($w, $line);
+		}
+	);
+
+	$self->{input} = $w;
+}
+
+sub _distribute {
+	my ($self, $w, $line) = @_;
+
+	foreach my $lr (@{$self->{distributors}}) {
+		my ($func, $cb) = @$lr;
+		last if ($func->($self, $w, $line, $cb));
+	}
+}
+
+sub _line {
+	my ($self, $w, $line, $cb) = @_;
+
+	$cb->($self, $w, $line);
+	return 1;
+}
+
+sub _json {
+	my ($self, $w, $line, $cb) = @_;
+
+	my $msg = eval { JSON::decode_json($line); };
+
+	if ($@) {
+		my $e = $@;
+		$self->{on_error}->("JSON decode error - $e", $line) if ($self->{on_error});
+	} else {
+		$cb->($self, $w, $msg);
+		return 1;
+	}
+
+	return 0;
+}
+
+sub line {
+	my ($self, $cb) = @_;
+	$self->_inputwait();
+	push(@{$self->{distributors}}, [ \&_line, $cb ]);
+}
+
+sub json {
+	my ($self, $cb) = @_;
+	$self->_inputwait();
+	push(@{$self->{distributors}}, [ \&_json, $cb ]);
+}
+
+sub send {
+	my ($self, $ref) = @_;
+
+	my $string = $self->{json}->encode($ref);
+	print $string,"\n";
 }
 
 1;

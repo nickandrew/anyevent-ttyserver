@@ -40,13 +40,13 @@ sub new {
 }
 
 sub every {
-	my ($self, $interval, $sub) = @_;
+	my ($self, $interval, $cb) = @_;
 
 	my $w;
 	$w = AnyEvent->timer(
 		after => $interval,
 		interval => $interval,
-		cb => sub { $sub->($self, $w); }
+		cb => sub { $cb->($self, $w); }
 	);
 }
 

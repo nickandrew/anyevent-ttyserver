@@ -20,26 +20,14 @@ every 5 => sub {
 };
 
 json sub {
-	my ($self, $w, $msg) = @_;
+	my ($self, $msg) = @_;
 
-	send($msg);
-};
-
-line sub {
-	my ($self, $w, $line) = @_;
-
-	if (!defined $line) {
+	if (!defined $msg) {
 		app->stop(0);
 		return;
 	}
 
-	chomp($line);
-	if ($line eq 'quit') {
-		app->stop(0);
-		return;
-	}
-
-	send({line => $line});
+	send({received => $msg});
 };
 
 my $rc = app->start;

@@ -10,6 +10,7 @@ use warnings;
 
 use AnyEvent;
 use JSON qw();
+use TtyServer::Stream qw();
 
 sub import {
 	my $class = shift;
@@ -75,6 +76,12 @@ sub _inputwait {
 		poll => 'r',
 		cb => sub {
 			my $line = <STDIN>;
+			if (!defined $line) {
+				undef $w;
+				delete $self->{input};
+				$self->_distribute(undef, undef);
+				return;
+			}
 			$self->_distribute($w, $line);
 		}
 	);
@@ -100,6 +107,11 @@ sub _line {
 
 sub _json {
 	my ($self, $w, $line, $cb) = @_;
+
+	if (!defined $line) {
+		$cb->($self, $w, undef);
+		return 1;
+	}
 
 	my $msg = eval { JSON::decode_json($line); };
 
@@ -129,8 +141,22 @@ sub json {
 sub send {
 	my ($self, $ref) = @_;
 
+	if (!defined $ref) {
+		# Can't encode that
+		print STDERR "Cannot encode undefined ref\n";
+		return;
+	}
+
 	my $string = $self->{json}->encode($ref);
-	print $string,"\n";
+	syswrite(\*STDOUT, $string . "\n");
+}
+
+sub stream {
+	my ($self, $fh) = @_;
+
+	my $stream = TtyServer::Stream->new($self, $fh);
+
+	return $stream;
 }
 
 1;

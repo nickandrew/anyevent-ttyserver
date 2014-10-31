@@ -25,12 +25,9 @@ sub new {
 }
 
 sub _inputwait {
-	my ($self) = @_;
+	my ($self, $func, $cb) = @_;
 
-	return if ($self->{input});
-
-	my $w;
-	$w = AnyEvent->io(
+	my $w = AnyEvent->io(
 		fh => $self->{fh},
 		poll => 'r',
 		cb => sub {
@@ -38,11 +35,10 @@ sub _inputwait {
 			if (!defined $line) {
 				# EOF
 				$self->{on_eof}->() if ($self->{on_eof});
-				undef $w;
 				delete $self->{input};
-				$self->_distribute(undef, undef);
+				$func->($self, undef, $cb);
 			} else {
-				$self->_distribute($w, $line);
+				$func->($self, $line, $cb);
 			}
 		}
 	);
@@ -50,28 +46,19 @@ sub _inputwait {
 	$self->{input} = $w;
 }
 
-sub _distribute {
-	my ($self, $w, $line) = @_;
-
-	foreach my $lr (@{$self->{distributors}}) {
-		my ($func, $cb) = @$lr;
-		last if ($func->($self, $w, $line, $cb));
-	}
-}
-
 sub _line {
-	my ($self, $w, $line, $cb) = @_;
+	my ($self, $line, $cb) = @_;
 
-	$cb->($self, $w, $line);
-	return 1;
+	$cb->($self, $line);
+	return;
 }
 
 sub _json {
-	my ($self, $w, $line, $cb) = @_;
+	my ($self, $line, $cb) = @_;
 
 	if (!defined $line) {
-		$cb->($self, $w, undef);
-		return 1;
+		$cb->($self, undef);
+		return;
 	}
 
 	my $msg = eval { JSON::decode_json($line); };
@@ -79,24 +66,22 @@ sub _json {
 	if ($@) {
 		my $e = $@;
 		$self->{on_error}->("JSON decode error - $e", $line) if ($self->{on_error});
+		$cb->($self, undef);
 	} else {
-		$cb->($self, $w, $msg);
-		return 1;
+		$cb->($self, $msg);
 	}
 
-	return 0;
+	return;
 }
 
 sub line {
 	my ($self, $cb) = @_;
-	$self->_inputwait();
-	push(@{$self->{distributors}}, [ \&_line, $cb ]);
+	$self->_inputwait(\&_line, $cb);
 }
 
 sub json {
 	my ($self, $cb) = @_;
-	$self->_inputwait();
-	push(@{$self->{distributors}}, [ \&_json, $cb ]);
+	$self->_inputwait(\&_json, $cb);
 }
 
 sub send {

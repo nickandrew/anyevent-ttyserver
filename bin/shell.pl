@@ -8,7 +8,7 @@ use warnings;
 use TtyServer;
 
 json sub {
-	my ($self, $w, $msg) = @_;
+	my ($self, $msg) = @_;
 
 	if (!defined $msg) {
 		print STDERR "$0 json EOF from peer, stopping.\n";

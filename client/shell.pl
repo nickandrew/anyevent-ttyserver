@@ -15,7 +15,7 @@ my $pid = open2($child_out, $child_in, "bin/shell.pl");
 my $stream_in = app->stream($child_in);
 
 line sub {
-	my ($self, $w, $line) = @_;
+	my ($self, $line) = @_;
 
 	if (!defined $line) {
 		# EOF

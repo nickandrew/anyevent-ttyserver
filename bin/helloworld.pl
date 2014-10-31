@@ -9,28 +9,27 @@ use TtyServer;
 
 my $count = 0;
 
-every 3 => sub {
-	print "Hello, world!\n";
+every 5 => sub {
+	print "Hello, world! $count\n";
 
 	if (++$count >= 5) {
 		app->stop(6);
 	}
 };
 
-json sub {
-	my ($self, $w, $msg) = @_;
-
-	my $s = JSON::encode_json({message => $msg});
-	print "JSON: $s\n";
-};
-
 line sub {
-	my ($self, $w, $line) = @_;
+	my ($self, $line) = @_;
+
+	if (!defined $line) {
+		app->stop(0);
+		return;
+	}
 
 	print "Received: $line";
 	chomp($line);
 	if ($line eq 'quit') {
 		app->stop(0);
+		return;
 	}
 };
 

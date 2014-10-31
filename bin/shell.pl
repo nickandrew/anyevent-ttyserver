@@ -10,11 +10,16 @@ use TtyServer;
 json sub {
 	my ($self, $w, $msg) = @_;
 
+	if (!defined $msg) {
+		print STDERR "$0 json EOF from peer, stopping.\n";
+		app->stop(0);
+		return;
+	}
+
 	my $r = ref($msg);
 	if (!$r) {
-		if ($msg eq "quit\n") {
-			app->stop(0);
-		}
+		app->stop(0);
+		return;
 	}
 	elsif ($r eq 'HASH') {
 		if ($msg->{cmd}) {
@@ -29,6 +34,7 @@ json sub {
 		}
 		elsif (defined $msg->{quit}) {
 			app->stop(0);
+			return;
 		}
 	}
 };

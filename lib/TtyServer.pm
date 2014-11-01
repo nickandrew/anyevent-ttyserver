@@ -7,6 +7,8 @@ package TtyServer;
 
 use strict;
 use warnings;
+use utf8;
+use feature ();
 
 use AnyEvent;
 use JSON qw();
@@ -25,6 +27,11 @@ sub import {
 	*{"${caller}::json"} = sub { $app->json(@_); };
 	*{"${caller}::send"} = sub { $app->send(@_); };
 	*{"${caller}::on_error"} = sub { $app->{on_error} = $_[0]; };
+
+	strict->import;
+	warnings->import;
+	utf8->import;
+	feature->import(':5.10');
 }
 
 sub new {

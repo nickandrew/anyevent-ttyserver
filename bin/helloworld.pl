@@ -2,9 +2,6 @@
 #
 #  TtyServer example script
 
-use strict;
-use warnings;
-
 use TtyServer;
 
 my $count = 0;

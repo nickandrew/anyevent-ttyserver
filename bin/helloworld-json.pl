@@ -1,13 +1,10 @@
 #!/usr/bin/perl
 #
-#  TtyServer example script
+#  AnyEvent::TtyServer example script
 #  STDIN:  plain text, type 'quit' to exit
 #  STDOUT: json with a periodic Hello World message.
 
-use strict;
-use warnings;
-
-use TtyServer;
+use AnyEvent::TtyServer;
 
 my $count = 0;
 

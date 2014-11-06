@@ -2,10 +2,7 @@
 #
 #  Server to run shell commands
 
-use strict;
-use warnings;
-
-use TtyServer;
+use AnyEvent::TtyServer;
 
 json sub {
 	my ($self, $msg) = @_;

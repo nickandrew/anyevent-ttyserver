@@ -3,10 +3,7 @@
 #  Shell client.
 #  Type a line, see it executed by the shell.
 
-use strict;
-use warnings;
-
-use TtyServer;
+use AnyEvent::TtyServer;
 use IPC::Open2;
 
 my ($child_out, $child_in);

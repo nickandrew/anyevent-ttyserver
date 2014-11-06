@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 #
-#  TtyServer example script
+#  AnyEvent::TtyServer example script
 
-use TtyServer;
+use AnyEvent::TtyServer;
 
 my $count = 0;
 

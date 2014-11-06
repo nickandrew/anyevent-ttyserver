@@ -1,0 +1,35 @@
+{
+   "abstract" : "Non-blocking framework for message interchange over pipes or ssh",
+   "author" : [
+      "Nick Andrew <nick@nick-andrew.net>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.131560",
+   "license" : [
+      "unknown"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "AnyEvent-TtyServer",
+   "prereqs" : {
+      "runtime" : {
+         "requires" : {
+            "AnyEvent" : "0",
+            "IPC::Open2" : "0",
+            "JSON" : "0"
+         }
+      }
+   },
+   "provides" : {
+      "AnyEvent::TtyServer" : {
+         "file" : "lib/AnyEvent/TtyServer.pm"
+      },
+      "AnyEvent::TtyServer::Stream" : {
+         "file" : "lib/AnyEvent/TtyServer/Stream.pm"
+      }
+   },
+   "release_status" : "stable",
+   "version" : "0.001"
+}

@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 use Module::Build;
 my $build = Module::Build->new(
 	dist_abstract => 'Non-blocking framework for message interchange over pipes or ssh',

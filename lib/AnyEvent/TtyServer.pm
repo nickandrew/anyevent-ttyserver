@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 #
-#  TtyServer acts a bit like a webserver, over a bidirectional tty connection
+#  AnyEvent::TtyServer acts a bit like a webserver, over a bidirectional tty connection
 #  (STDIN and STDOUT)
 
-package TtyServer;
+package AnyEvent::TtyServer;
 
 use strict;
 use warnings;
@@ -12,7 +12,7 @@ use feature ();
 
 use AnyEvent;
 use JSON qw();
-use TtyServer::Stream qw();
+use AnyEvent::TtyServer::Stream qw();
 
 sub import {
 	my $class = shift;
@@ -74,12 +74,12 @@ sub stop {
 
 sub line {
 	my ($self, $cb) = @_;
-	TtyServer::Stream->new($self, \*STDIN)->line($cb);
+	AnyEvent::TtyServer::Stream->new($self, \*STDIN)->line($cb);
 }
 
 sub json {
 	my ($self, $cb) = @_;
-	TtyServer::Stream->new($self, \*STDIN)->json($cb);
+	AnyEvent::TtyServer::Stream->new($self, \*STDIN)->json($cb);
 }
 
 sub send {
@@ -98,7 +98,7 @@ sub send {
 sub stream {
 	my ($self, $fh) = @_;
 
-	my $stream = TtyServer::Stream->new($self, $fh);
+	my $stream = AnyEvent::TtyServer::Stream->new($self, $fh);
 
 	return $stream;
 }

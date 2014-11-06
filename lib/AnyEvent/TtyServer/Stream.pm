@@ -3,7 +3,7 @@
 #  Provides 1 input/output stream with json()/line()/send() functions
 #  'fh' could be: STDIN, STDOUT, a pipe or a socket.
 
-package TtyServer::Stream;
+package AnyEvent::TtyServer::Stream;
 
 use strict;
 use warnings;

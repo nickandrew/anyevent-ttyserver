@@ -1,0 +1,4 @@
+MANIFEST
+Build.PL
+lib/AnyEvent/TtyServer.pm
+lib/AnyEvent/TtyServer/Stream.pm

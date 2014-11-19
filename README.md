@@ -52,6 +52,15 @@ AnyEvent event loop, so it will be event-driven.
 
 ### Methods
 
+#### after
+
+```perl
+after 60 => sub { print "About sixty seconds elapsed!\n"; };
+```
+
+_after_ will run a subroutine only once, after the specified number of seconds
+has elapsed.
+
 #### every
 
 ```perl

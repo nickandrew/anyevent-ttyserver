@@ -23,9 +23,11 @@ sub import {
 
 	no strict 'refs';
 	*{"${caller}::app"} = sub { return $app; };
+
+	*{"${caller}::after"} = sub { $app->after(@_); };
 	*{"${caller}::every"} = sub { $app->every(@_); };
-	*{"${caller}::line"} = sub { $app->line(@_); };
 	*{"${caller}::json"} = sub { $app->json(@_); };
+	*{"${caller}::line"} = sub { $app->line(@_); };
 	*{"${caller}::send"} = sub { $app->send(@_); };
 	*{"${caller}::on_error"} = sub { $app->{on_error} = $_[0]; };
 
@@ -59,6 +61,23 @@ sub every {
 	);
 
 	# If invoked as $x = every(...) then do not keep a reference to the timer.
+	# This will enable it to be cancelled later with "undef $x".
+	$keep = (defined wantarray) ? undef : $w;
+
+	return $w;
+}
+
+sub after {
+	my ($self, $delay, $cb) = @_;
+
+	my ($w, $keep);
+
+	$w = AnyEvent->timer(
+		after => $delay,
+		cb => sub { $cb->($self); $keep; }
+	);
+
+	# If invoked as $x = after(...) then do not keep a reference to the timer.
 	# This will enable it to be cancelled later with "undef $x".
 	$keep = (defined wantarray) ? undef : $w;
 

@@ -50,18 +50,60 @@ exit($rc);
 This framework uses the AnyEvent module for non-blocking I/O. All the code runs from the
 AnyEvent event loop, so it will be event-driven.
 
-_every_ will run a subroutine periodically. "every 5" means run every 5 seconds.
+### Methods
+
+#### every
+
+```perl
+every 5 => sub { print "Hello!\n"; };
+```
+
+_every_ will run a subroutine periodically. "every 5" means run every 5 seconds,
+starting in 5 seconds from now.
+
+#### json
+
+```perl
+json sub {
+	my ($self, $msg) = @_;
+
+	# Process $msg which is a hashref or array ref
+};
+```
 
 _json_ sets a subroutine which will be called whenever a JSON formatted message is received
 on STDIN. The $msg argument contains the decoded data structure.
 
+To use _json_ with a file handle other than STDIN:
+
+```perl
+app->stream($fh)->json(sub { ... });
+```
+
+#### line
+
 The alternative to _json_ for unformatted data is _line_ which is called with the
 received line, unprocessed.
 
-There can be only one _json_ or _line_ subroutine.
+```perl
+line sub {
+	my ($self, $string) = @_;
+
+	print "Received line: $string";
+};
+```
+
+There can be only one _json_ or _line_ subroutine for STDIN.
+
+#### start
 
 Call _app->start_ after defining event-driven subroutines, to start the AnyEvent event
 loop. To stop the application, call _app->stop()_ with an exit code.
+
+#### stop
+
+A call to _app->stop(code)_ will cause the call to _app->start_ to return with the
+supplied value.
 
 ## Writing a client
 

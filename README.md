@@ -14,9 +14,9 @@ Example of a simple server script:
 ```perl
 #!/usr/bin/perl
 #
-#  AnyEvent::TtyServer example script
-#  STDIN:  plain text, EOF to exit
-#  STDOUT: json with a periodic Hello World message.
+#  Example script: echo back plus periodic "Hello world"
+#  STDIN:  one JSON message per line, EOF to exit
+#  STDOUT: JSON with a periodic Hello World message.
 
 use AnyEvent::TtyServer;
 

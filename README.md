@@ -15,7 +15,7 @@ Example of a simple server script:
 #!/usr/bin/perl
 #
 #  AnyEvent::TtyServer example script
-#  STDIN:  plain text, type 'quit' to exit
+#  STDIN:  plain text, EOF to exit
 #  STDOUT: json with a periodic Hello World message.
 
 use AnyEvent::TtyServer;
@@ -61,7 +61,7 @@ received line, unprocessed.
 There can be only one _json_ or _line_ subroutine.
 
 Call _app->start_ after defining event-driven subroutines, to start the AnyEvent event
-loop. To stop the application, call app->stop() with an exit code.
+loop. To stop the application, call _app->stop()_ with an exit code.
 
 ## Writing a client
 
@@ -95,5 +95,5 @@ $child_out->json(sub { print "Received a message.\n"; });
 
 ## Credits
 
-Huge props to Mojolicious, upon which I modeled this design. Mojo has a really nice API
-and underlying design.
+Huge props to [Mojolicious](http://mojolicio.us/), upon which I modeled
+this design. Mojo has a really nice API and underlying design.

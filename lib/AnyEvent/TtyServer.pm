@@ -11,6 +11,7 @@ use utf8;
 use feature ();
 
 use AnyEvent;
+use IPC::Open2;
 use JSON qw();
 use AnyEvent::TtyServer::Stream qw();
 
@@ -101,6 +102,32 @@ sub stream {
 	my $stream = AnyEvent::TtyServer::Stream->new($self, $fh);
 
 	return $stream;
+}
+
+=head2 I<exec($self, $command)>
+
+Execute a command. Return an array of (pid, child_in, child_out).
+
+child_in and child_out are AnyEvent::TtyServer::Stream objects.
+
+To use them:
+
+	$child_in->send($data_structure);
+
+	$child_out->json(sub { ... });
+
+=cut
+
+sub exec {
+	my ($self, $command) = @_;
+
+	my ($fh_out, $fh_in);
+	my $pid = open2($fh_out, $fh_in, $command);
+
+	my $child_in = $self->stream($fh_in);
+	my $child_out = $self->stream($fh_out);
+
+	return ($pid, $child_in, $child_out);
 }
 
 1;

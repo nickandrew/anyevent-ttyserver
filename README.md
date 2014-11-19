@@ -69,26 +69,29 @@ A client is very similar to a server (indeed, the protocol does not distinguish 
 clients and servers). However it is likely that a client's connection to a server will
 be on some file descriptor other than STDIN/STDOUT.
 
-To process messages from some other file descriptor, use the app->stream() function.
-For example, to make an ssh connection to another host and run a server process on
-that, do:
+To process messages from some other file handle, use the app->stream() function.
+For example,
 
 ```perl
-use IPC::Open2;
+my $stream = app->stream($fh);
 
-my ($child_out, $child_in);
-my $pid = open2($child_out, $child_in, "ssh hostname server.pl");
-my $stream_in = app->stream($child_in);
+$stream->send( { data => "abcd" } );
 
-app->stream($child_out)->json(sub {
-	my ($self, $msg) = @_;
-
-	$stream_in->send({ ... reply message ... });
-});
+$stream->json(sub { print "Received a message.\n"; });
 ```
 
-I will add a new class soon to simplify this, by calling open2() itself and
-providing the $stream_in and $stream_out (app->stream($child_out)) objects.
+## Communicating across an ssh login
+
+To make an ssh connection to another host and run a server process on
+that host, do:
+
+```perl
+my ($pid, $child_in, $child_out) = app->exec("ssh hostname server.pl");
+
+$child_in->send( { data => "abcd" } );
+
+$child_out->json(sub { print "Received a message.\n"; });
+```
 
 ## Credits
 

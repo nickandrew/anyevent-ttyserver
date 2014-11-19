@@ -50,12 +50,19 @@ sub new {
 sub every {
 	my ($self, $interval, $cb) = @_;
 
-	my $w;
+	my ($w, $keep);
+
 	$w = AnyEvent->timer(
 		after => $interval,
 		interval => $interval,
-		cb => sub { $cb->($self, $w); }
+		cb => sub { $cb->($self); $keep; }
 	);
+
+	# If invoked as $x = every(...) then do not keep a reference to the timer.
+	# This will enable it to be cancelled later with "undef $x".
+	$keep = (defined wantarray) ? undef : $w;
+
+	return $w;
 }
 
 sub start {

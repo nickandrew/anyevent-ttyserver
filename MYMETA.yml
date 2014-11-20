@@ -4,11 +4,11 @@ author:
   - 'Nick Andrew <nick@nick-andrew.net>'
 build_requires: {}
 dynamic_config: 0
-generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.131560'
+generated_by: 'Module::Build version 0.421, CPAN::Meta::Converter version 2.142690'
 license: unknown
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
+  version: '1.4'
 name: AnyEvent-TtyServer
 provides:
   AnyEvent::TtyServer:
@@ -16,7 +16,7 @@ provides:
   AnyEvent::TtyServer::Stream:
     file: lib/AnyEvent/TtyServer/Stream.pm
 requires:
-  AnyEvent: 0
-  IPC::Open2: 0
-  JSON: 0
-version: 0.001
+  AnyEvent: '0'
+  IPC::Open2: '0'
+  JSON: '0'
+version: '0.001'

@@ -4,7 +4,7 @@
       "Nick Andrew <nick@nick-andrew.net>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.131560",
+   "generated_by" : "Module::Build version 0.421",
    "license" : [
       "unknown"
    ],

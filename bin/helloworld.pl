@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 #
-#  AnyEvent::TtyServer example script
+#  Print "Hello world" every 5 seconds
+#  STDIN:  plain text; EOF or 'quit' to terminate script
+#  STDOUT: plain text echoed from STDIN
+#  Script will terminate (code 6) after 25 seconds.
 
 use AnyEvent::TtyServer;
 

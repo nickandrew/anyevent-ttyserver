@@ -1,8 +1,9 @@
 #!/usr/bin/perl
 #
 #  AnyEvent::TtyServer example script
-#  STDIN:  plain text, type 'quit' to exit
+#  STDIN:  json; EOF to terminate script
 #  STDOUT: json with a periodic Hello World message.
+#  Script will terminate (code 6) after 25 seconds.
 
 use AnyEvent::TtyServer;
 

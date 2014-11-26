@@ -57,7 +57,7 @@ sub every {
 	$w = AnyEvent->timer(
 		after => $interval,
 		interval => $interval,
-		cb => sub { $cb->($self); $keep; }
+		cb => sub { local $_; $cb->($self); $keep; }
 	);
 
 	# If invoked as $x = every(...) then do not keep a reference to the timer.
@@ -74,7 +74,7 @@ sub after {
 
 	$w = AnyEvent->timer(
 		after => $delay,
-		cb => sub { $cb->($self); $keep; }
+		cb => sub { local $_; $cb->($self); $keep; }
 	);
 
 	# If invoked as $x = after(...) then do not keep a reference to the timer.

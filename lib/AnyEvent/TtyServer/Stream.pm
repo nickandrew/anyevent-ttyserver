@@ -31,6 +31,7 @@ sub _inputwait {
 		fh => $self->{fh},
 		poll => 'r',
 		cb => sub {
+			local $_;
 			my $line = $self->{fh}->getline();
 			if (!defined $line) {
 				# EOF

@@ -4,7 +4,7 @@ use Module::Build;
 my $build = Module::Build->new(
 	dist_abstract => 'Non-blocking framework for message interchange over pipes or ssh',
 	dist_author   => 'Nick Andrew <nick@nick-andrew.net>',
-	dist_version  => '0.001',
+	dist_version  => '0.002',
 	installdirs   => 'vendor',
 	module_name   => 'AnyEvent::TtyServer',
 	requires      => {
